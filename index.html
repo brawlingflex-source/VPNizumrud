@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Изумруд ВПН - Ваша безопасность в сети</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --emerald-green: #2ecc71;
+            --dark-emerald: #27ae60;
+            --light-emerald: #58d68d;
+            --dark-bg: #1e272e;
+            --light-bg: #2c3e50;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            --radius: 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e272e 0%, #2c3e50 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--emerald-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--emerald-green);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-actions i {
+            font-size: 22px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .vpn-status {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .status-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2c3e50 0%, var(--dark-bg) 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--emerald-green);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .status-circle.active {
+            border-color: var(--light-emerald);
+            box-shadow: 0 0 30px rgba(88, 214, 141, 0.7);
+        }
+
+        .status-circle::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: conic-gradient(var(--emerald-green), transparent, var(--emerald-green));
+            border-radius: 50%;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+        }
+
+        .status-circle.active::before {
+            animation: rotate 2s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-icon {
+            font-size: 40px;
+            color: var(--emerald-green);
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status-location {
+            font-size: 14px;
+            color: var(--light-emerald);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .connect-btn {
+            background: var(--emerald-green);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            margin-top: 20px;
+        }
+
+        .connect-btn:hover {
+            background: var(--dark-emerald);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
+        }
+
+        .connect-btn:active {
+            transform: translateY(0);
+        }
+        
+        .subscription-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subscription-btn:hover {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.6);
+        }
+        
+        .subscription-btn:active {
+            transform: translateY(0);
+        }
+        
+        .subscription-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 25px;
+            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subscription-btn:hover {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.6);
+        }
+        
+        .subscription-btn:active {
+            transform: translateY(0);
+        }
+
+        .locations-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--emerald-green);
+        }
+
+        .location-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .location-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .location-item:hover {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: rgba(46, 204, 113, 0.3);
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .location-flag {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .location-details h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .location-details p {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .location-speed {
+            display: flex;
+            align-items: center;
+            color: var(--light-emerald);
+        }
+
+        .location-speed i {
+            margin-right: 5px;
+        }
+
+        .features-section {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(46, 204, 113, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--emerald-green);
+        }
+
+        .feature-text h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .feature-text p {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .footer-item:hover i, .footer-item.active i {
+            color: var(--emerald-green);
+        }
+
+        .footer-item span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .footer-item.active span {
+            color: var(--emerald-green);
+        }
+        
+        /* Модальное окно подписок */
+        .subscription-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .subscription-modal.active {
+            display: flex;
+        }
+        
+        .subscription-content {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .subscription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .subscription-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .close-modal {
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .subscription-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .subscription-option {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .subscription-option > div:first-child {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+        
+        .subscription-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateX(5px);
+        }
+        
+        .subscription-option.selected {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: white;
+        }
+        
+        .subscription-period {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .subscription-price {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .active-subscription {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .active-subscription h4 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .active-subscription p {
+            margin: 0;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .reset-subscription-btn {
+            background: #e74c3c;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .reset-subscription-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .buy-subscription-btn {
+            background: #27ae60;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .buy-subscription-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        
+        .buy-option-btn {
+            background: #27ae60;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        .buy-option-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+        
+        .subscription-option.selected {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: var(--emerald-green);
+        }
+
+        .speed-test {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .speed-test.active {
+            display: flex;
+        }
+
+        .speed-test-content {
+            background: var(--dark-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .speed-test h3 {
+            margin-bottom: 20px;
+            color: var(--emerald-green);
+        }
+
+        .speed-meter {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .speed-meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-green), var(--light-emerald));
+            width: 0%;
+            border-radius: 10px;
+            transition: width 3s ease;
+        }
+
+        .speed-result {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--emerald-green);
+            margin-top: 20px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .settings-section {
+            display: none;
+            margin-bottom: 25px;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--emerald-green);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(24px);
+        }
+
+        .about-section {
+            display: none;
+            margin-bottom: 25px;
+        }
+
+        .about-section.active {
+            display: block;
+        }
+
+        .about-content {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .about-content h4 {
+            color: var(--emerald-green);
+            margin-bottom: 15px;
+        }
+
+        .about-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .version-info {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        .server-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .server-info h5 {
+            color: var(--emerald-green);
+            margin-bottom: 10px;
+        }
+
+        .server-info p {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .location-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .location-popup.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background: var(--dark-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .popup-header h3 {
+            color: var(--emerald-green);
+            margin: 0;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            margin-right: 10px;
+            color: var(--emerald-green);
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            width: 100%;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .region-list {
+            margin-bottom: 20px;
+        }
+
+        .region-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--emerald-green);
+        }
+
+        .region-list-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .region-list-item:hover {
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 15px;
+            }
+
+            .main-card {
+                padding: 20px;
+            }
+
+            .status-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .status-icon {
+                font-size: 32px;
+            }
+
+            .connect-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--dark-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .notification-modal {
+            max-width: 600px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: var(--emerald-green);
+        }
+        
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--emerald-green);
+            transition: all 0.3s ease;
+        }
+        
+        .notification-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .notification-date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+        }
+        
+        .notification-details {
+            font-size: 14px;
+            color: white;
+        }
+        
+        .notification-price {
+            font-weight: bold;
+            color: var(--emerald-green);
+            margin-top: 5px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <div class="logo-text">Изумруд ВПН</div>
+            </div>
+            <div class="header-actions">
+                <i class="bi bi-bell" id="notificationBell"></i>
+                <i class="bi bi-gear"></i>
+            </div>
+        </div>
+
+        <!-- Main VPN Status Card -->
+        <div class="main-card">
+            <div class="vpn-status">
+                <div class="status-circle" id="statusCircle">
+                    <i class="bi bi-globe status-icon"></i>
+                    <div class="status-text">Отключено</div>
+                    <div class="status-location">Выберите локацию</div>
+                </div>
+                <button class="connect-btn" id="connectBtn">Подключиться</button>
+                <button class="subscription-btn" id="subscriptionBtn" onclick="openSubscriptionModal()">Управление подписками</button>
+            </div>
+        </div>
+
+        <!-- Locations Section -->
+        <div class="locations-section">
+            <div class="section-title">
+                <i class="bi bi-geo-alt"></i>
+                <span>Популярные локации</span>
+            </div>
+            <div class="location-list">
+                <div class="location-item" data-location="США" data-speed="Высокая">
+                    <div class="location-info">
+                        <div class="location-flag">🇺🇸</div>
+                        <div class="location-details">
+                            <h5>США</h5>
+                            <p>Нью-Йорк</p>
+                        </div>
+                    </div>
+                    <div class="location-speed">
+                        <i class="bi bi-lightning"></i>
+                        <span>Высокая</span>
+                    </div>
+                </div>
+                <div class="location-item" data-location="Великобритания" data-speed="Средняя">
+                    <div class="location-info">
+                        <div class="location-flag">🇬🇧</div>
+                        <div class="location-details">
+                            <h5>Великобритания</h5>
+                            <p>Лондон</p>
+                        </div>
+                    </div>
+                    <div class="location-speed">
+                        <i class="bi bi-dash-circle"></i>
+                        <span>Средняя</span>
+                    </div>
+                </div>
+                <div class="location-item" data-location="Германия" data-speed="Высокая">
+                    <div class="location-info">
+                        <div class="location-flag">🇩🇪</div>
+                        <div class="location-details">
+                            <h5>Германия</h5>
+                            <p>Берлин</p>
+                        </div>
+                    </div>
+                    <div class="location-speed">
+                        <i class="bi bi-lightning"></i>
+                        <span>Высокая</span>
+                    </div>
+                </div>
+                <div class="location-item" data-location="Япония" data-speed="Средняя">
+                    <div class="location-info">
+                        <div class="location-flag">🇯🇵</div>
+                        <div class="location-details">
+                            <h5>Япония</h5>
+                            <p>Токио</p>
+                        </div>
+                    </div>
+                    <div class="location-speed">
+                        <i class="bi bi-dash-circle"></i>
+                        <span>Средняя</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="section-title">
+                <i class="bi bi-star"></i>
+                <span>Наши преимущества</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="feature-text">
+                    <h5>Военная защита</h5>
+                    <p>Шифрование AES-256</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="bi bi-globe2"></i>
+                </div>
+                <div class="feature-text">
+                    <h5>Безлимитный трафик</h5>
+                    <p>Без ограничений и блокировок</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="bi bi-lightning"></i>
+                </div>
+                <div class="feature-text">
+                    <h5>Высокая скорость</h5>
+                    <p>Оптимизированные серверы</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="footer">
+            <div class="footer-item active">
+                <i class="bi bi-house-door"></i>
+                <span>Главная</span>
+            </div>
+            <div class="footer-item" id="locationsFooter">
+                <i class="bi bi-geo-alt"></i>
+                <span>Локации</span>
+            </div>
+            <div class="footer-item" id="speedTestFooter">
+                <i class="bi bi-speedometer2"></i>
+                <span>Скорость</span>
+            </div>
+            <div class="footer-item" id="settingsFooter">
+                <i class="bi bi-gear"></i>
+                <span>Настройки</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Speed Test Modal -->
+    <div class="speed-test" id="speedTest">
+        <div class="speed-test-content">
+            <span class="close-btn" id="closeSpeedTest">&times;</span>
+            <h3>Тест скорости</h3>
+            <p>Измерение скорости вашего соединения...</p>
+            <div class="speed-meter">
+                <div class="speed-meter-fill" id="speedMeterFill"></div>
+            </div>
+            <div class="speed-result" id="speedResult">0 Мбит/с</div>
+        </div>
+    </div>
+
+    <!-- All Locations Modal -->
+    <div class="location-popup" id="locationPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h3>Все локации</h3>
+                <span class="close-btn" id="closeLocationPopup">&times;</span>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Поиск локации..." id="searchLocation">
+            </div>
+
+            <div class="region-list">
+                <div class="region-title">Европа</div>
+                <div class="region-list-item">🇫🇷 Франция - Париж</div>
+                <div class="region-list-item">🇮🇹 Италия - Рим</div>
+                <div class="region-list-item">🇪🇸 Испания - Мадрид</div>
+                <div class="region-list-item">🇳🇱 Нидерланды - Амстердам</div>
+                <div class="region-list-item">🇨🇭 Швейцария - Цюрих</div>
+            </div>
+
+            <div class="region-list">
+                <div class="region-title">Азия</div>
+                <div class="region-list-item">🇰🇷 Южная Корея - Сеул</div>
+                <div class="region-list-item">🇸🇬 Сингапур</div>
+                <div class="region-list-item">🇮🇳 Индия - Дели</div>
+                <div class="region-list-item">🇹🇭 Таиланд - Бангкок</div>
+                <div class="region-list-item">🇻🇳 Вьетнам - Ханой</div>
+            </div>
+
+            <div class="region-list">
+                <div class="region-title">Америка</div>
+                <div class="region-list-item">🇨🇦 Канада - Торонто</div>
+                <div class="region-list-item">🇧🇷 Бразилия - Сан-Паулу</div>
+                <div class="region-list-item">🇲🇽 Мексика - Мехико</div>
+                <div class="region-list-item">🇦🇷 Аргентина - Буэнос-Айрес</div>
+                <div class="region-list-item">🇨🇴 Колумбия - Богота</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="settings-section" id="settingsSection">
+        <div class="main-card">
+            <div class="section-title">
+                <i class="bi bi-gear"></i>
+                <span>Настройки</span>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <h5>Автоматическое подключение</h5>
+                    <p>Подключаться при запуске приложения</p>
+                </div>
+                <div class="toggle-switch" id="autoConnectToggle"></div>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <h5>Kill Switch</h5>
+                    <p>Автоматическое отключение интернета при обрыве ВПН</p>
+                </div>
+                <div class="toggle-switch active" id="killSwitchToggle"></div>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <h5>Сжатие данных</h5>
+                    <p>Уменьшение трафика для экономии</p>
+                </div>
+                <div class="toggle-switch" id="compressionToggle"></div>
+            </div>
+            <div class="setting-item">
+                <div>
+                    <h5>Протокол</h5>
+                    <p>Выберите протокол</p>
+                </div>
+                <select class="form-select" style="width: auto;">
+                    <option selected>Auto</option>
+                    <option>OpenVPN (TCP)</option>
+                    <option>OpenVPN (UDP)</option>
+                    <option>WireGuard</option>
+                    <option>IKEv2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="section-title">
+                <i class="bi bi-info-circle"></i>
+                <span>О приложении</span>
+            </div>
+            <div class="about-content">
+                <h4>Изумруд ВПН</h4>
+                <p>Надежное VPN-приложение для защиты вашей приватности в интернете. Шифруйте ваш трафик, обойдите блокировки и получите доступ к любому контенту.</p>
+            </div>
+            <div class="server-info">
+                <h5>Информация о сервере</h5>
+                <p>IP: <span id="serverIp">192.168.1.1</span></p>
+                <p>Статус: <span style="color: var(--emerald-green);">Онлайн</span></p>
+            </div>
+            <div class="version-info">
+                Версия 1.2.3 | Build 456
+            </div>
+        </div>
+        
+        <!-- Notification Modal -->
+        <div class="modal-overlay" id="notificationModal">
+            <div class="modal-content notification-modal">
+                <div class="modal-header">
+                    <h3>История покупок</h3>
+                    <i class="bi bi-x" onclick="closeNotificationModal()"></i>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <!-- History items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // VPN Connection Status
+            const connectBtn = document.getElementById('connectBtn');
+            const subscriptionBtn = document.getElementById('subscriptionBtn');
+            const statusCircle = document.getElementById('statusCircle');
+            const statusText = statusCircle.querySelector('.status-text');
+            const statusLocation = statusCircle.querySelector('.status-location');
+            let isConnected = false;
+
+            // Connect/Disconnect Button
+            connectBtn.addEventListener('click', function() {
+                if (!isConnected) {
+                    // Проверяем наличие активной подписки
+                    const subscriptionData = localStorage.getItem('subscription');
+                    if (!subscriptionData) {
+                        // Показываем сообщение об ошибке
+                        const errorMsg = document.createElement('div');
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Сначала купите подписку!';
+                        document.querySelector('.vpn-status').appendChild(errorMsg);
+                        
+                        // Убираем сообщение через 5 секунд
+                        setTimeout(() => {
+                            errorMsg.remove();
+                        }, 5000);
+                        return;
+                    }
+                    
+                    // Connect to VPN
+                    isConnected = true;
+                    statusCircle.classList.add('active');
+                    statusText.textContent = 'Подключено';
+                    connectBtn.textContent = 'Отключиться';
+                    connectBtn.style.background = '#e74c3c';
+
+                    // Simulate connection process
+                    connectBtn.textContent = 'Подключение...';
+                    setTimeout(() => {
+                        connectBtn.textContent = 'Отключиться';
+                    }, 1500);
+                } else {
+                    // Disconnect from VPN
+                    isConnected = false;
+                    statusCircle.classList.remove('active');
+                    statusText.textContent = 'Отключено';
+                    statusLocation.textContent = 'Выберите локацию';
+                    connectBtn.textContent = 'Подключиться';
+                    connectBtn.style.background = '';
+                }
+            });
+
+            // Location Selection
+            const locationItems = document.querySelectorAll('.location-item');
+            locationItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (!isConnected) {
+                        const location = this.dataset.location;
+                        const speed = this.dataset.speed;
+                        statusLocation.textContent = location;
+
+                        // Visual feedback
+                        locationItems.forEach(loc => loc.style.background = 'rgba(255, 255, 255, 0.05)');
+                        this.style.background = 'rgba(46, 204, 113, 0.2)';
+                    }
+                });
+            });
+
+            // Speed Test Modal
+            const speedTestFooter = document.getElementById('speedTestFooter');
+            const speedTest = document.getElementById('speedTest');
+            const closeSpeedTest = document.getElementById('closeSpeedTest');
+            const speedMeterFill = document.getElementById('speedMeterFill');
+            const speedResult = document.getElementById('speedResult');
+
+            speedTestFooter.addEventListener('click', function() {
+                speedTest.classList.add('active');
+                simulateSpeedTest();
+            });
+
+            closeSpeedTest.addEventListener('click', function() {
+                speedTest.classList.remove('active');
+                speedMeterFill.style.width = '0%';
+                speedResult.textContent = '0 Мбит/с';
+            });
+
+            function simulateSpeedTest() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        const speed = (Math.random() * 50 + 20).toFixed(1);
+                        speedResult.textContent = `${speed} Мбит/с`;
+                    }
+                    speedMeterFill.style.width = `${progress}%`;
+                }, 200);
+            }
+
+            // All Locations Modal
+            const locationsFooter = document.getElementById('locationsFooter');
+            const locationPopup = document.getElementById('locationPopup');
+            const closeLocationPopup = document.getElementById('closeLocationPopup');
+            const searchLocation = document.getElementById('searchLocation');
+
+            locationsFooter.addEventListener('click', function() {
+                locationPopup.classList.add('active');
+            });
+
+            closeLocationPopup.addEventListener('click', function() {
+                locationPopup.classList.remove('active');
+            });
+
+            searchLocation.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const regionLists = document.querySelectorAll('.region-list-item');
+
+                regionLists.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // Settings Section
+            const settingsFooter = document.getElementById('settingsFooter');
+            const settingsSection = document.getElementById('settingsSection');
+
+            settingsFooter.addEventListener('click', function() {
+                settingsSection.classList.toggle('active');
+            });
+
+            // Toggle Switches
+            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+
+            // Управление подписками
+            subscriptionBtn.addEventListener('click', function() {
+                openSubscriptionModal();
+            });
+            
+            // Обработчик кнопки Купить
+            const buyBtn = document.getElementById('buySubscriptionBtn');
+            if (buyBtn) {
+                buyBtn.addEventListener('click', function() {
+                    openSubscriptionModal();
+                });
+            }
+            
+            // Update Server IP
+            const serverIp = document.getElementById('serverIp');
+            if (serverIp) {
+                // Generate random IP for demo
+                const randomIP = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+                serverIp.textContent = randomIP;
+            }
+            
+            // Функция открытия модального окна подписок
+            window.openSubscriptionModal = function() {
+                document.getElementById('subscriptionModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Функция закрытия модального окна подписок
+            window.closeSubscriptionModal = function(event) {
+                if (event) {
+                    event.stopPropagation();
+                }
+                document.getElementById('subscriptionModal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Функция закрытия модального окна уведомлений
+            window.closeNotificationModal = function() {
+                document.getElementById('notificationModal').style.display = 'none';
+            };
+            
+            // Функция выбора подписки
+            window.selectSubscription = function(element) {
+                // Удаляем класс selected у всех вариантов
+                document.querySelectorAll('.subscription-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Добавляем класс selected к выбранному варианту
+                element.classList.add('selected');
+                
+                // Здесь можно добавить логику обработки выбора подписки
+                const period = element.querySelector('.subscription-period').textContent;
+                const price = element.querySelector('.subscription-price').textContent;
+                
+                console.log(`Выбрана подписка: ${period} за ${price}`);
+                
+                // Сохраняем информацию о подписке
+                const subscriptionData = {
+                    period: period,
+                    price: price,
+                    endDate: calculateEndDate(period)
+                };
+                
+                // Сохраняем в localStorage
+                localStorage.setItem('subscription', JSON.stringify(subscriptionData));
+                
+                // Обновляем статус активной подписки
+                updateActiveSubscription();
+                
+                // Через 2 секунды закрываем модальное окно
+                setTimeout(() => {
+                    closeSubscriptionModal();
+                    alert(`Вы выбрали подписку: ${period}`);
+                }, 1000);
+            }
+            
+            // Функция покупки подписки
+            window.buySubscription = function(period, price) {
+                console.log("Функция buySubscription вызвана с параметрами:", period, price);
+                
+                // Показываем окно подтверждения
+                const confirmPurchase = confirm(`Подтверждаете покупку? (${period} за ${price})`);
+                
+                if (confirmPurchase) {
+                    console.log(`Покупка подписки подтверждена: ${period} за ${price}`);
+                    
+                    // Сохраняем информацию о подписке
+                    const subscriptionData = {
+                        period: period,
+                        price: price,
+                        endDate: calculateEndDate(period)
+                    };
+                    
+                    // Сохраняем в localStorage
+                    localStorage.setItem('subscription', JSON.stringify(subscriptionData));
+                    
+                    // Обновляем статус активной подписки
+                    updateActiveSubscription();
+                    
+                    // Закрываем модальное окно
+                    closeSubscriptionModal();
+                    
+                    // Показываем сообщение об успешной покупке
+                    alert(`Вы успешно купили подписку: ${period}`);
+                } else {
+                    console.log("Покупка отменена");
+                }
+            }
+            
+            // Делаем функцию доступной глобально
+            window.buySubscription = buySubscription;
+            
+            // Функция расчета даты окончания подписки
+            window.calculateEndDate = function(period) {
+                const endDate = new Date();
+                
+                if (period.includes('месяц')) {
+                    const months = period.match(/\d+/)[0];
+                    endDate.setMonth(endDate.getMonth() + parseInt(months));
+                } else if (period.includes('год')) {
+                    endDate.setFullYear(endDate.getFullYear() + 1);
+                }
+                
+                return endDate.toLocaleDateString('ru-RU', { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+            }
+            
+            // Функция обновления статуса активной подписки
+            window.updateActiveSubscription = function() {
+                const subscriptionData = localStorage.getItem('subscription');
+                const statusElement = document.getElementById('subscriptionStatus');
+                const buyBtn = document.getElementById('buySubscriptionBtn');
+                
+                if (subscriptionData) {
+                    const subscription = JSON.parse(subscriptionData);
+                    statusElement.textContent = `Подписка: ${subscription.period}. Истекает: ${subscription.endDate}`;
+                    document.getElementById('resetSubscriptionBtn').style.display = 'block';
+                    buyBtn.style.display = 'none';
+                } else {
+                    statusElement.textContent = 'нет активных подписок';
+                    document.getElementById('resetSubscriptionBtn').style.display = 'none';
+                    buyBtn.style.display = 'block';
+                }
+            }
+            
+            // Функция подтверждения сброса подписки
+            window.confirmResetSubscription = function() {
+                if (confirm('Вы уверены, что хотите сбросить подписку? После этого действие нельзя будет отменить.')) {
+                    window.resetSubscription();
+                }
+            }
+            
+            // Функция сброса подписки
+            window.resetSubscription = function() {
+                localStorage.removeItem('subscription');
+                window.updateActiveSubscription();
+                alert('Ваша подписка успешно сброшена');
+            }
+            
+            // Закрытие модального окна при клике вне его
+            document.getElementById('subscriptionModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSubscriptionModal();
+                }
+            });
+            
+            // Обновляем статус активной подписки при загрузке страницы
+            updateActiveSubscription();
+            
+            // Notification bell functionality
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationModal = document.getElementById('notificationModal');
+            const notificationList = document.getElementById('notificationList');
+            
+            // Open notification modal
+            notificationBell.addEventListener('click', function() {
+                showNotificationHistory();
+                notificationModal.style.display = 'flex';
+            });
+            
+            // Close notification modal
+            window.closeNotificationModal = function() {
+                notificationModal.style.display = 'none';
+            };
+            
+            // Show notification history
+            window.showNotificationHistory = function() {
+                // Get purchase history from localStorage
+                const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
+                
+                // Clear current list
+                notificationList.innerHTML = '';
+                
+                // Show message if no purchases
+                if (purchaseHistory.length === 0) {
+                    notificationList.innerHTML = '<p style="text-align: center; color: rgba(255, 255, 255, 0.5);">Покупок пока нет</p>';
+                    return;
+                }
+                
+                // Display last 10 purchases
+                const displayCount = Math.min(10, purchaseHistory.length);
+                for (let i = purchaseHistory.length - 1; i >= purchaseHistory.length - displayCount; i--) {
+                    const purchase = purchaseHistory[i];
+                    const item = document.createElement('div');
+                    item.className = 'notification-item';
+                    
+                    const date = new Date(purchase.date);
+                    const formattedDate = date.toLocaleString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    item.innerHTML = `
+                        <div class="notification-date">${formattedDate}</div>
+                        <div class="notification-details">Подписка: ${purchase.period}</div>
+                        <div class="notification-price">${purchase.price}</div>
+                    `;
+                    
+                    notificationList.appendChild(item);
+                }
+            };
+            
+            // Add purchase to history
+            window.addPurchaseToHistory = function(period, price) {
+                const purchaseHistory = JSON.parse(localStorage.getItem('purchaseHistory') || '[]');
+                
+                purchaseHistory.push({
+                    period: period,
+                    price: price,
+                    date: new Date().toISOString()
+                });
+                
+                localStorage.setItem('purchaseHistory', JSON.stringify(purchaseHistory));
+            }
+            
+            // Modify buySubscription to add purchase to history
+            const originalBuySubscription = buySubscription;
+            window.buySubscription = function(period, price) {
+                // Add purchase to history
+                addPurchaseToHistory(period, price);
+                
+                // Call original function
+                originalBuySubscription(period, price);
+            };
+        });
+    </script>
+    
+    <!-- Модальное окно подписок -->
+    <div id="subscriptionModal" class="subscription-modal">
+        <div class="subscription-content">
+            <div class="subscription-header">
+                <h3 class="subscription-title">Выберите подписку</h3>
+                <div class="close-modal" onclick="closeSubscriptionModal(event)">×</div>
+            </div>
+            
+            <div class="active-subscription" id="activeSubscription">
+                <h4>Активные подписки:</h4>
+                <p id="subscriptionStatus">нет активных подписок</p>
+            </div>
+            
+            <div class="subscription-options">
+                <div class="subscription-option" id="option1" onclick="selectSubscription(this)">
+                    <div class="subscription-period">1 месяц</div>
+                    <div class="subscription-price">149₽</div>
+                    <button class="buy-option-btn" onclick="event.stopPropagation(); buySubscription('1 месяц', '149₽')">Купить</button>
+                </div>
+                <div class="subscription-option" id="option3" onclick="selectSubscription(this)">
+                    <div class="subscription-period">3 месяца</div>
+                    <div class="subscription-price">349₽</div>
+                    <button class="buy-option-btn" onclick="event.stopPropagation(); buySubscription('3 месяца', '349₽')">Купить</button>
+                </div>
+                <div class="subscription-option" id="option6" onclick="selectSubscription(this)">
+                    <div class="subscription-period">6 месяцев</div>
+                    <div class="subscription-price">649₽</div>
+                    <button class="buy-option-btn" onclick="event.stopPropagation(); buySubscription('6 месяцев', '649₽')">Купить</button>
+                </div>
+                <div class="subscription-option" id="option12" onclick="selectSubscription(this)">
+                    <div class="subscription-period">1 год</div>
+                    <div class="subscription-price">1299₽</div>
+                    <button class="buy-option-btn" onclick="event.stopPropagation(); buySubscription('1 год', '1299₽')">Купить</button>
+                </div>
+            </div>
+            <button class="reset-subscription-btn" id="resetSubscriptionBtn" onclick="confirmResetSubscription()">Сбросить подписку</button>
+        </div>
+    </div>
+</body>
+</html>
